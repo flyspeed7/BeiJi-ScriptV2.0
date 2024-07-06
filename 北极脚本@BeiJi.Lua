@@ -7,13 +7,13 @@ CoreGui:SetCore("SendNotification", {
 
 local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/sharksharksharkshark/-/main/black%20ui.txt'))()
  
-local Window = library:CreateWindow("鲨工作室", "北极2", 10044538000)
+local Window = library:CreateWindow("鲨/凌工作室", "北极2", 10044538000)
  
 local Tab = Window:CreateTab("感谢大家和小凌🥰")
 
 local Page = Tab:CreateFrame("常用")
 
-Button = Page:CreateButton("飞行", "", function()
+Button = Page:CreateButton("飞行", "你是小鸟吗?还会飞", function()
     loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\34\104\116\116\112\115\58\47\47\112\97\115\116\101\98\105\110\46\99\111\109\47\114\97\119\47\90\66\122\99\84\109\49\102\34\41\41\40\41\10")()
 end)
 
