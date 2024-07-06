@@ -2111,23 +2111,23 @@ end)
 
 local Page = Tab:CreateFrame("感染的微笑")
 
-Button = Page:CreateButton("无cd棒球棒", "", function()
+Button = Page:CreateButton("无cd棒球棒", "好", function()
     game.Players.LocalPlayer.Character.Bat.Cooldown.Value = 0
 end)
 
-Button = Page:CreateButton("无cd玻璃瓶", "", function()
+Button = Page:CreateButton("无cd玻璃瓶", "好", function()
     game.Players.LocalPlayer.Character.Bottle.Cooldown.Value = 0
 end)
 
-Button = Page:CreateButton("无cd武士刀", "", function()
+Button = Page:CreateButton("无cd武士刀", "好", function()
     game.Players.LocalPlayer.Character.Katana.Cooldown.Value = 0
 end)
 
-Button = Page:CreateButton("无cd木棒", "", function()
+Button = Page:CreateButton("无cd木棒", "好", function()
     game.Players.LocalPlayer.Character.Branch.Cooldown.Value = 0
 end)
 
-Button = Page:CreateButton("自动拿玻璃杯", "", function()
+Button = Page:CreateButton("自动拿玻璃杯", "有Bug", function()
     game:GetService("CoreGui").PurchasePrompt.Enabled = false
 _G.Lag = true
 while _G.Lag do
@@ -2140,7 +2140,7 @@ end
   end
 end)
 
-Button = Page:CreateButton("删除白块", "", function()
+Button = Page:CreateButton("删除白块", "好玩!", function()
     for _,v in pairs(game.workspace:GetDescendants()) do
 
 if string.find(v.Name,"Infector") then
@@ -2158,4 +2158,126 @@ Button = Page:CreateButton("隔山打牛", "木头玻璃", function()
 end)
 
 
-local Page = Tab:CreateFrame("敬请期待")
+local Page = Tab:CreateFrame("战斗战士")
+
+Button = Page:CreateButton("自动盾反", "别人拿武器直接反不好用", function()
+local lp = game.Players.LocalPlayer
+
+local animationInfo = {}
+
+function getInfo(id)
+  local success, info = pcall(function()
+      return game:GetService("MarketplaceService"):GetProductInfo(id)
+  end)
+  if success then
+      return info
+  end
+  return {Name=''}
+end
+function block(player)
+  keypress(0x46)
+  wait()
+  keyrelease(0x46)
+end
+
+local AnimNames = {
+  'Slash',
+  'Swing',
+  'Sword'
+}
+
+function playerAdded(v)
+    local function charadded(char)
+      local humanoid = char:WaitForChild("Humanoid", 5)
+      if humanoid then
+          humanoid.AnimationPlayed:Connect(function(track)
+              local info = animationInfo[track.Animation.AnimationId]
+              if not info then
+                  info = getInfo(tonumber(track.Animation.AnimationId:match("%d+")))
+                  animationInfo[track.Animation.AnimationId] = info
+              end
+             
+              if (lp.Character and lp.Character:FindFirstChild("Head") and v.Character:FindFirstChild("Head")) then
+                  local mag = (v.Character.Head.Position - lp.Character.Head.Position).Magnitude
+                  if mag < 15  then
+                     
+                      for _, animName in pairs(AnimNames) do
+                          if info.Name:match(animName) then
+                              pcall(block, v)
+                          end
+                      end
+                     
+                  end
+              end
+          end)
+      end
+  end
+ 
+  if v.Character then
+      charadded(v.Character)
+  end
+  v.CharacterAdded:Connect(charadded)
+end
+
+for i,v in pairs(game.Players:GetPlayers()) do
+   if v ~= lp then
+       playerAdded(v)
+   end
+end
+
+game.Players.PlayerAdded:Connect(playerAdded)
+end)
+
+Button = Page:CreateButton("跳跃无间隔、无限耐力、水下呼吸", "很好用很推荐👍", function()
+for i,v in pairs(getgc(true)) do
+   if typeof(v) == "table" and rawget(v, "getIsMaxed") then
+       v.getIsMaxed = function()
+           return false
+       end
+       v.getFlags = function()
+           return 1
+       end
+       v.addFlags = function(a,b)
+           a:setFlags(0)
+           return
+       end
+   end
+   -- "There was another script here but it caused the user to crash (lag out), so it had to be removed" -KiwisASkid --
+   if typeof(v) == "table" and rawget(v, "spawnCharacter") then
+       local oldfunc = v.spawnCharacter
+       v.SpawnCharacter = function(a)
+           for _,f in pairs(getgc(true)) do
+               if typeof(f) == "table" and rawget(f, "getIsMaxed") then
+                   f.getIsMaxed = function()
+                       return false
+                   end
+                   f.getFlags = function()
+                       return 1
+                   end
+                   f.addFlags = function(aa,b)
+                       aa:setFlags(0)
+                       return
+                   end
+               end
+           end
+       end
+   end
+   if typeof(v) == "table" and rawget(v, "getCanJump") then
+       v.getCanJump = function()
+           return true
+       end
+   end
+   if typeof(v) == "table" and rawget(v, "JUMP_DELAY_ADD") then
+       v.JUMP_DELAY_ADD = 0.5
+   end
+   if typeof(v) == "table" and rawget(v, "_setStamina") then
+       v._setStamina = function(a, b)
+           a._stamina = math.huge
+           a._staminaChangedSignal:Fire(99)
+       end
+   end
+end
+game.StarterGui:SetCore("SendNotification", {Title = "CB", Text = "Script loaded, "..game.Players.LocalPlayer.DisplayName..".", Duration = 4,})
+end)
+
+local Page = Tab:CreateFrame("等待小凌更新.谢谢")
